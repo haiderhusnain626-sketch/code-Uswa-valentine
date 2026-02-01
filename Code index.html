@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For Uswa 💖</title>
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  background:radial-gradient(circle,#ff9a9e,#fad0c4);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:'Comic Sans MS',cursive;
+  color:white;
+  overflow:hidden;
+}
+
+.container{text-align:center}
+
+h1{font-size:2.8rem;margin-bottom:25px}
+
+button{
+  padding:15px 38px;
+  font-size:1.3rem;
+  border:none;
+  border-radius:40px;
+  cursor:pointer;
+  transition:transform .25s;
+}
+
+#yes{background:#ff2f68;color:white}
+#no{
+  background:white;
+  color:#ff2f68;
+  position:absolute;
+}
+
+.shy{
+  margin-top:45px;
+  font-size:1rem;
+  opacity:.85;
+}
+
+#intro{
+  font-size:2.5rem;
+  animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+  from{opacity:.6}to{opacity:1}
+}
+
+#celebrate{
+  display:none;
+  font-size:2.7rem;
+  animation:pop .7s infinite alternate;
+}
+
+@keyframes pop{
+  from{transform:scale(1)}
+  to{transform:scale(1.15)}
+}
+
+canvas{
+  position:fixed;
+  top:0;left:0;
+  pointer-events:none;
+}
+
+.heart{
+  position:absolute;
+  font-size:24px;
+  animation:float 4s linear infinite;
+}
+
+@keyframes float{
+  from{transform:translateY(0);opacity:1}
+  to{transform:translateY(-650px);opacity:0}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="loading">
+  <div id="intro">Calculating destiny… 💫</div>
+</div>
+
+<div class="container" id="main" style="display:none">
+  <h1>Uswa, will you be my Valentine? 💘</h1>
+  <button id="yes">Yes 💖</button>
+  <button id="no">No 🙈</button>
+  <div class="shy" id="shy">no seems a bit shy</div>
+</div>
+
+<div class="container" id="celebrate">
+  💍 YAYYYY USWA 💕<br><br>
+  Today, tomorrow, always — it’s you.<br>
+  Love, <b>Husnain</b> 💖
+</div>
+
+<canvas id="confetti"></canvas>
+
+<audio id="music" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5c2d6caa6f.mp3">
+</audio>
+
+<script>
+const loading=document.getElementById("loading");
+const main=document.getElementById("main");
+const no=document.getElementById("no");
+const yes=document.getElementById("yes");
+const shy=document.getElementById("shy");
+const celebrate=document.getElementById("celebrate");
+const music=document.getElementById("music");
+
+setTimeout(()=>{
+  loading.style.display="none";
+  main.style.display="block";
+},2200);
+
+document.body.addEventListener("click",()=>music.play(),{once:true});
+
+let scale=1,tries=0;
+
+function runNo(){
+  tries++;
+  no.style.left=Math.random()*(window.innerWidth-150)+"px";
+  no.style.top=Math.random()*(window.innerHeight-150)+"px";
+  scale+=.12;
+  yes.style.transform=`scale(${scale})`;
+  if(tries>2)shy.textContent="Destiny already knows your answer 😌";
+}
+no.addEventListener("mouseover",runNo);
+no.addEventListener("click",runNo);
+
+yes.addEventListener("click",()=>{
+  main.style.display="none";
+  celebrate.style.display="block";
+  confetti();
+  hearts();
+});
+
+const canvas=document.getElementById("confetti");
+const ctx=canvas.getContext("2d");
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+
+const pieces=[...Array(200)].map(()=>({
+  x:Math.random()*canvas.width,
+  y:Math.random()*canvas.height,
+  r:Math.random()*6+2,
+  d:Math.random()*8,
+  c:`hsl(${Math.random()*360},100%,70%)`
+}));
+
+function confetti(){
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.c;
+      ctx.fill();
+      p.y+=Math.cos(p.d)+2;
+      if(p.y>canvas.height)p.y=0;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function hearts(){
+  setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="heart";
+    h.textContent="💖";
+    h.style.left=Math.random()*innerWidth+"px";
+    h.style.bottom="0px";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),4000);
+  },280);
+}
+</script>
+
+</body>
+</html>
